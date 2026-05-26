@@ -228,6 +228,7 @@
       border-radius: 4px;
       text-decoration: none;
       cursor: pointer;
+      overflow: hidden;
       transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
                   background 180ms ease;
       letter-spacing: 0.3px;
@@ -240,22 +241,27 @@
 
     .cta:active { transform: translateY(0); }
 
-    /* Ripple pulse — pseudo-element using transform+opacity (cheap) */
+    /* Slow shimmer sweep — diagonal highlight travels across the button */
     .cta-pulse::after {
       content: "";
       position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      border: 2px solid var(--cta);
-      opacity: 0;
+      top: 0;
+      bottom: 0;
+      left: -40%;
+      width: 35%;
+      background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.22) 50%, transparent 100%);
+      transform: skewX(-22deg);
       pointer-events: none;
-      animation: ctaRipple 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      animation: ctaSheen 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
 
-    @keyframes ctaRipple {
-      0%   { transform: scale(0.98); opacity: 0; }
-      15%  { opacity: 0.55; }
-      100% { transform: scale(1.16); opacity: 0; }
+    /* Reset sheen position when CTA contents change order in stacking */
+    .cta-pulse > * { position: relative; z-index: 1; }
+
+    @keyframes ctaSheen {
+      0%, 55% { left: -40%; }
+      85%     { left: 110%; }
+      100%    { left: 110%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
